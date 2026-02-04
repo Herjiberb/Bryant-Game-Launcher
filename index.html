@@ -12,26 +12,28 @@
             --white: #ffffff;
         }
 
-        body {
+        body, html {
             margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
             font-family: 'Arial Black', sans-serif;
             background-color: var(--white);
             color: var(--forest-green);
+            overflow-x: hidden;
         }
 
-        /* --- LAUNCHER UI --- */
+        /* --- UI OVERLAY --- */
         header {
             background: var(--vibrant-green);
             padding: 20px 50px;
             border-bottom: 8px solid var(--pure-yellow);
             display: flex;
-            justify-content: space-between;
             align-items: center;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        .brand { cursor: pointer; display: flex; align-items: center; gap: 15px; }
-        .logo-box { background: var(--pure-yellow); padding: 5px 15px; border-radius: 8px; border: 3px solid #000; }
+        .logo-box { background: var(--pure-yellow); padding: 5px 15px; border-radius: 8px; border: 3px solid #000; margin-right: 15px; }
 
         .page { padding: 50px; max-width: 1200px; margin: 0 auto; display: none; }
         .active { display: block; }
@@ -44,11 +46,11 @@
             cursor: pointer; 
             box-shadow: 8px 8px 0 var(--pure-yellow);
         }
-        .card:hover { transform: scale(1.02); }
+        .card:hover { transform: translateY(-5px); }
         .card-img { width: 100%; height: 200px; object-fit: cover; }
 
-        /* --- FULLSCREEN OVERLAY --- */
-        #game-container {
+        /* --- THE INESCAPABLE LAYER --- */
+        #game-overlay {
             display: none;
             position: fixed;
             top: 0;
@@ -56,55 +58,42 @@
             width: 100vw;
             height: 100vh;
             background: #000;
-            z-index: 9999;
+            z-index: 100000; /* Over everything */
         }
 
         #game-iframe {
             width: 100%;
             height: 100%;
             border: none;
-        }
-
-        .exit-hint {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-family: sans-serif;
-            pointer-events: none;
-            opacity: 0.7;
+            display: block;
         }
 
         .btn-play {
             background: var(--vibrant-green);
             color: white;
-            padding: 20px 60px;
-            font-size: 1.5rem;
+            padding: 25px 80px;
+            font-size: 2rem;
             border: none;
-            border-radius: 10px;
+            border-radius: 15px;
             cursor: pointer;
-            box-shadow: 0 6px 0 var(--forest-green);
+            box-shadow: 0 8px 0 var(--forest-green);
             margin-top: 20px;
+            text-transform: uppercase;
         }
 
-        .btn-play:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--forest-green); }
+        .btn-play:hover { background: var(--pure-yellow); color: var(--forest-green); }
     </style>
 </head>
 <body>
 
     <div id="launcher-ui">
         <header>
-            <div class="brand" onclick="showPage('home')">
-                <div class="logo-box">B</div>
-                <h1 style="color: white; margin: 0;">BRYANT GAMES</h1>
-            </div>
+            <div class="logo-box">B</div>
+            <h1 style="color: white; margin: 0;">BRYANT GAMES</h1>
         </header>
 
         <section id="home" class="page active">
-            <h2 style="font-size: 2.5rem;">GAME LIBRARY</h2>
+            <h2 style="font-size: 3rem; color: var(--vibrant-green);">SELECT YOUR GAME</h2>
             <div class="grid" id="game-grid"></div>
         </section>
 
@@ -113,8 +102,7 @@
         </section>
     </div>
 
-    <div id="game-container">
-        <div class="exit-hint">Press ESC to Exit Fullscreen</div>
+    <div id="game-overlay">
         <iframe id="game-iframe" src=""></iframe>
     </div>
 
@@ -123,7 +111,7 @@
             {
                 id: 0,
                 title: "PLANTS VS LAWN MOWERS",
-                description: "Automatic botanical defense. The game will launch in Fullscreen mode with Mouse Lock enabled.",
+                description: "WARNING: High Intensity Botanical Combat. Once you enter, the game takes full control. Refresh page to return to launcher.",
                 image: "PLANTS VS LAWN MOWERS.png",
                 path: "PLANTS VS LAWN MOWERS/PLANTS VS LAWN MOWERS.html"
             }
@@ -138,7 +126,7 @@
             const grid = document.getElementById('game-grid');
             grid.innerHTML = gameLibrary.map(game => `
                 <div class="card" onclick="viewGame(${game.id})">
-                    <img src="${game.image}" class="card-img" onerror="this.src='https://via.placeholder.com/300x200'">
+                    <img src="${game.image}" class="card-img" onerror="this.src='https://via.placeholder.com/300x200?text=GAME+LOGO'">
                     <div style="padding: 15px;"><h3>${game.title}</h3></div>
                 </div>
             `).join('');
@@ -147,55 +135,44 @@
         function viewGame(id) {
             const game = gameLibrary.find(g => g.id === id);
             document.getElementById('detail-area').innerHTML = `
-                <div style="display:flex; gap: 40px;">
-                    <img src="${game.image}" style="width: 400px; border-radius: 15px; border: 5px solid var(--vibrant-green);">
+                <div style="display:flex; gap: 50px; align-items: center;">
+                    <img src="${game.image}" style="width: 450px; border-radius: 25px; border: 8px solid var(--vibrant-green); box-shadow: 15px 15px 0 var(--pure-yellow);">
                     <div>
-                        <h2 style="font-size: 3rem; margin: 0;">${game.title}</h2>
-                        <p style="font-size: 1.2rem;">${game.description}</p>
-                        <button class="btn-play" onclick="launchFullscreen('${game.path}')">START GAME</button>
+                        <h2 style="font-size: 4rem; margin: 0; color: var(--vibrant-green);">${game.title}</h2>
+                        <p style="font-size: 1.4rem; font-weight: bold;">${game.description}</p>
+                        <button class="btn-play" onclick="initiateHardLock('${game.path}')">LOCK & LOAD</button>
                     </div>
                 </div>
             `;
             showPage('game-detail');
         }
 
-        function launchFullscreen(path) {
-            const container = document.getElementById('game-container');
+        function initiateHardLock(path) {
+            const overlay = document.getElementById('game-overlay');
             const iframe = document.getElementById('game-iframe');
 
-            // 1. Set the source
+            // Set source and show overlay
             iframe.src = path;
-            container.style.display = 'block';
+            overlay.style.display = 'block';
 
-            // 2. Request Fullscreen
-            if (container.requestFullscreen) {
-                container.requestFullscreen();
-            } else if (container.webkitRequestFullscreen) {
-                container.webkitRequestFullscreen();
-            }
+            // LOCK MOUSE LOGIC
+            // Note: Browser requires a click to trigger pointer lock. 
+            // The user clicking "LOCK & LOAD" counts as that gesture.
+            overlay.requestPointerLock = overlay.requestPointerLock || overlay.webkitRequestPointerLock;
+            overlay.requestPointerLock();
 
-            // 3. Auto-Click / Mouse Lock Logic
-            // This forces the mouse to "enter" the game world immediately
-            container.addEventListener('click', () => {
-                container.requestPointerLock();
+            // Handle accidental Esc or movement - re-locks on click
+            overlay.addEventListener('click', () => {
+                overlay.requestPointerLock();
             });
 
-            // Simulate the first click to trigger internal game menus
+            // Set focus immediately to the iframe
             iframe.onload = () => {
-                setTimeout(() => {
-                    container.click(); 
-                    console.log("Game Loaded: Mouse Locked and Focus Sent.");
-                }, 500);
+                iframe.focus();
+                // Send a virtual "click" to the iframe to wake up audio/input
+                iframe.contentWindow.postMessage('focus', '*');
             };
         }
-
-        // Listen for escape key to show launcher again
-        document.addEventListener('fullscreenchange', () => {
-            if (!document.fullscreenElement) {
-                document.getElementById('game-container').style.display = 'none';
-                document.getElementById('game-iframe').src = ""; // Stop the game
-            }
-        });
 
         renderLibrary();
     </script>

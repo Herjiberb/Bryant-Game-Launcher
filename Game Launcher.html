@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRYANT GAMES LAUNCHER</title>
+    <style>
+        :root {
+            --vibrant-green: #00c853; /* High-energy green */
+            --forest-green: #1b5e20;
+            --pure-yellow: #ffea00;  /* Brightest yellow */
+            --white: #ffffff;
+            --shadow: #004d40;
+        }
+
+        * { box-sizing: border-box; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+        body {
+            background-color: var(--white);
+            /* Subtle geometric pattern */
+            background-image:  linear-gradient(30deg, #f8fcf8 12%, transparent 12.5%, transparent 87%, #f8fcf8 87.5%, #f8fcf8), linear-gradient(150deg, #f8fcf8 12%, transparent 12.5%, transparent 87%, #f8fcf8 87.5%, #f8fcf8), linear-gradient(30deg, #f8fcf8 12%, transparent 12.5%, transparent 87%, #f8fcf8 87.5%, #f8fcf8), linear-gradient(150deg, #f8fcf8 12%, transparent 12.5%, transparent 87%, #f8fcf8 87.5%, #f8fcf8), linear-gradient(60deg, #f1f8e9 25%, transparent 25.5%, transparent 75%, #f1f8e9 75.5%, #f1f8e9), linear-gradient(60deg, #f1f8e9 25%, transparent 25.5%, transparent 75%, #f1f8e9 75.5%, #f1f8e9);
+            background-size: 80px 140px;
+            color: var(--forest-green);
+            font-family: 'Arial Black', sans-serif;
+            margin: 0;
+            padding-bottom: 50px;
+        }
+
+        /* --- HEADER --- */
+        header {
+            background: var(--vibrant-green);
+            padding: 25px 50px;
+            border-bottom: 10px solid var(--pure-yellow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 0 var(--forest-green);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            cursor: pointer;
+        }
+
+        .logo-box {
+            background: var(--pure-yellow);
+            color: var(--forest-green);
+            padding: 10px 20px;
+            border: 4px solid var(--white);
+            border-radius: 12px;
+            font-size: 2rem;
+            box-shadow: 4px 4px 0 var(--forest-green);
+        }
+
+        .brand h1 { color: var(--white); margin: 0; letter-spacing: -2px; font-size: 2.2rem; }
+
+        nav span {
+            color: var(--white);
+            margin-left: 30px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            background: var(--forest-green);
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 3px solid var(--pure-yellow);
+        }
+
+        nav span:hover { background: var(--pure-yellow); color: var(--forest-green); }
+
+        /* --- CONTAINER --- */
+        .page { display: none; padding: 60px 50px; max-width: 1400px; margin: 0 auto; }
+        .active { display: block; }
+
+        /* --- GAME GRID --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        .card {
+            background: var(--white);
+            border: 6px solid var(--vibrant-green);
+            border-radius: 25px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 12px 12px 0 var(--pure-yellow), 12px 12px 0 6px var(--forest-green);
+        }
+
+        .card:hover { transform: translateY(-10px) rotate(-1deg); }
+
+        .card-img { width: 100%; height: 240px; object-fit: cover; border-bottom: 6px solid var(--vibrant-green); }
+        .card-body { padding: 25px; }
+        .card-body h3 { margin: 0; font-size: 1.6rem; color: var(--forest-green); }
+
+        /* --- GAME PAGE --- */
+        .detail-flex {
+            display: flex;
+            gap: 60px;
+            background: var(--white);
+            padding: 40px;
+            border: 10px solid var(--pure-yellow);
+            border-radius: 40px;
+            box-shadow: 20px 20px 0 var(--vibrant-green);
+        }
+
+        .detail-img {
+            flex: 1;
+            max-width: 500px;
+            border-radius: 20px;
+            border: 8px solid var(--vibrant-green);
+        }
+
+        .detail-content { flex: 1; }
+        .detail-content h2 { font-size: 4rem; color: var(--vibrant-green); margin: 0 0 20px 0; line-height: 0.9; }
+        .detail-content p { font-family: 'Segoe UI', sans-serif; font-size: 1.3rem; line-height: 1.6; font-weight: bold; }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 20px 50px;
+            font-family: inherit;
+            font-size: 1.5rem;
+            border-radius: 15px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 8px 0 var(--forest-green);
+        }
+
+        .btn-play { background: var(--vibrant-green); color: var(--white); }
+        .btn-play:active { transform: translateY(4px); box-shadow: 0 4px 0 var(--forest-green); }
+        
+        .btn-back { background: var(--pure-yellow); color: var(--forest-green); margin-left: 20px; }
+
+        /* --- PROJECTS --- */
+        .projects-card {
+            background: var(--forest-green);
+            color: var(--white);
+            padding: 100px;
+            text-align: center;
+            border-radius: 50px;
+            border: 10px dashed var(--pure-yellow);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand" onclick="showPage('home')">
+            <div class="logo-box">B</div>
+            <h1>BRYANT GAMES</h1>
+        </div>
+        <nav>
+            <span onclick="showPage('home')">LIBRARY</span>
+            <span onclick="showPage('projects')">PROJECTS</span>
+        </nav>
+    </header>
+
+    <section id="home" class="page active">
+        <h2 style="font-size: 3rem; margin-bottom: 40px; color: var(--vibrant-green); text-shadow: 3px 3px var(--pure-yellow);">TOP TITLES</h2>
+        <div class="grid" id="game-grid"></div>
+    </section>
+
+    <section id="game-detail" class="page">
+        <div id="detail-area"></div>
+    </section>
+
+    <section id="projects" class="page">
+        <div class="projects-card">
+            <h2 style="font-size: 4rem; color: var(--pure-yellow);">DEVELOPMENT HUB</h2>
+            <p style="font-size: 1.5rem; max-width: 800px; margin: 20px auto;">We're currently engineering the next generation of web-based chaos. New titles arriving throughout 2026.</p>
+        </div>
+    </section>
+
+    <script>
+        const gameLibrary = [
+            {
+                id: 0,
+                title: "PLANTS VS LAWN MOWERS",
+                description: "The suburban war reaches a boiling point! Defend your turf with genetically modified flora against the relentless mechanical hunger of industrial lawn mowers. Strategy is your only fertilizer.",
+                image: "PLANTS VS LAWN MOWERS.png",
+                path: "PLANTS VS LAWN MOWERS/PLANTS VS LAWN MOWERS.html"
+            }
+        ];
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        function renderLibrary() {
+            const grid = document.getElementById('game-grid');
+            grid.innerHTML = gameLibrary.map(game => `
+                <div class="card" onclick="viewGame(${game.id})">
+                    <img src="${game.image}" class="card-img" onerror="this.src='https://via.placeholder.com/400x250?text=IMAGE+NOT+FOUND'">
+                    <div class="card-body">
+                        <h3>${game.title}</h3>
+                        <p style="color: var(--vibrant-green); margin-bottom: 0;">PLAY NOW &rarr;</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function viewGame(id) {
+            const game = gameLibrary.find(g => g.id === id);
+            const detailArea = document.getElementById('detail-area');
+            
+            detailArea.innerHTML = `
+                <div class="detail-flex">
+                    <img src="${game.image}" class="detail-img" onerror="this.src='https://via.placeholder.com/500x500?text=PREVIEW'">
+                    <div class="detail-content">
+                        <h2>${game.title}</h2>
+                        <p>${game.description}</p>
+                        <button class="btn btn-play" onclick="launchGame('${game.path}')">LAUNCH GAME</button>
+                        <button class="btn btn-back" onclick="showPage('home')">BACK</button>
+                    </div>
+                </div>
+            `;
+            showPage('game-detail');
+        }
+
+        function launchGame(path) {
+            // Using the about:blank injection method as requested
+            const win = window.open('about:blank', '_blank');
+            
+            if (!win) {
+                alert("Please allow pop-ups for Bryant Launcher!");
+                return;
+            }
+
+            // Style the container window
+            win.document.body.style.margin = '0';
+            win.document.body.style.background = '#000';
+            win.document.body.style.height = '100vh';
+            win.document.body.style.overflow = 'hidden';
+            win.document.title = "BRYANT GAMES - " + path.split('/')[0];
+
+            // Inject the iframe
+            const iframe = win.document.createElement('iframe');
+            iframe.style.border = 'none';
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            // Use window.location.origin to help with local relative pathing
+            iframe.src = window.location.origin + '/' + encodeURI(path);
+
+            win.document.body.appendChild(iframe);
+        }
+
+        // Init
+        renderLibrary();
+    </script>
+</body>
+</html>

@@ -17,71 +17,88 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            font-family: 'Arial Black', sans-serif;
             background-color: var(--white);
             color: var(--forest-green);
-            overflow-x: hidden;
+            font-family: 'Arial Black', sans-serif;
+            overflow: hidden; /* Prevents scrollbars during lock */
         }
 
-        /* --- UI OVERLAY --- */
+        /* --- VIBRANT UI --- */
+        #launcher-ui {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            background-image: radial-gradient(var(--pure-yellow) 0.5px, transparent 0.5px);
+            background-size: 30px 30px;
+        }
+
         header {
             background: var(--vibrant-green);
-            padding: 20px 50px;
-            border-bottom: 8px solid var(--pure-yellow);
+            padding: 25px 50px;
+            border-bottom: 10px solid var(--pure-yellow);
             display: flex;
             align-items: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 0 var(--forest-green);
         }
 
-        .logo-box { background: var(--pure-yellow); padding: 5px 15px; border-radius: 8px; border: 3px solid #000; margin-right: 15px; }
+        .logo-box { 
+            background: var(--pure-yellow); 
+            padding: 10px 20px; 
+            border: 4px solid #000; 
+            border-radius: 15px; 
+            font-size: 2rem;
+            margin-right: 20px;
+        }
 
-        .page { padding: 50px; max-width: 1200px; margin: 0 auto; display: none; }
+        .page { padding: 50px; max-width: 1400px; margin: 0 auto; display: none; }
         .active { display: block; }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
+        /* --- GAME TILES --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 40px; }
         .card { 
-            border: 5px solid var(--vibrant-green); 
-            border-radius: 20px; 
+            background: white;
+            border: 6px solid var(--vibrant-green); 
+            border-radius: 30px; 
             overflow: hidden; 
             cursor: pointer; 
-            box-shadow: 8px 8px 0 var(--pure-yellow);
+            box-shadow: 12px 12px 0 var(--forest-green);
         }
-        .card:hover { transform: translateY(-5px); }
-        .card-img { width: 100%; height: 200px; object-fit: cover; }
+        .card:hover { transform: translateY(-8px) scale(1.02); }
+        .card-img { width: 100%; height: 250px; object-fit: cover; border-bottom: 6px solid var(--vibrant-green); }
 
-        /* --- THE INESCAPABLE LAYER --- */
-        #game-overlay {
-            display: none;
+        /* --- THE INESCAPABLE FRAME --- */
+        #game-viewport {
+            display: none; /* Hidden until launch */
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
             background: #000;
-            z-index: 100000; /* Over everything */
+            z-index: 999999;
         }
 
         #game-iframe {
             width: 100%;
             height: 100%;
             border: none;
-            display: block;
+            outline: none;
         }
 
-        .btn-play {
+        /* --- BUTTONS --- */
+        .btn-launch {
             background: var(--vibrant-green);
             color: white;
-            padding: 25px 80px;
+            padding: 25px 60px;
             font-size: 2rem;
             border: none;
-            border-radius: 15px;
+            border-radius: 20px;
             cursor: pointer;
-            box-shadow: 0 8px 0 var(--forest-green);
-            margin-top: 20px;
+            box-shadow: 0 10px 0 var(--forest-green);
             text-transform: uppercase;
+            margin-top: 30px;
         }
-
-        .btn-play:hover { background: var(--pure-yellow); color: var(--forest-green); }
+        .btn-launch:active { transform: translateY(5px); box-shadow: 0 5px 0 var(--forest-green); }
     </style>
 </head>
 <body>
@@ -89,11 +106,11 @@
     <div id="launcher-ui">
         <header>
             <div class="logo-box">B</div>
-            <h1 style="color: white; margin: 0;">BRYANT GAMES</h1>
+            <h1 style="color: white; font-size: 3rem; margin: 0; letter-spacing: -2px;">BRYANT GAMES</h1>
         </header>
 
         <section id="home" class="page active">
-            <h2 style="font-size: 3rem; color: var(--vibrant-green);">SELECT YOUR GAME</h2>
+            <h2 style="font-size: 3.5rem; color: var(--vibrant-green); -webkit-text-stroke: 1px var(--forest-green);">GAME LIBRARY</h2>
             <div class="grid" id="game-grid"></div>
         </section>
 
@@ -102,16 +119,18 @@
         </section>
     </div>
 
-    <div id="game-overlay">
-        <iframe id="game-iframe" src=""></iframe>
+    <div id="game-viewport">
+        <iframe id="game-iframe" src="" allow="autoplay; pointer-lock"></iframe>
     </div>
 
     <script>
+        // ADD MORE GAMES HERE
+        // The path should be relative to where this index.html is sitting
         const gameLibrary = [
             {
                 id: 0,
                 title: "PLANTS VS LAWN MOWERS",
-                description: "WARNING: High Intensity Botanical Combat. Once you enter, the game takes full control. Refresh page to return to launcher.",
+                description: "Vibrant botanical warfare! Defend your garden against the mechanical mower threat. NOTE: Mouse will lock to screen upon start. Refresh page (F5) to exit.",
                 image: "PLANTS VS LAWN MOWERS.png",
                 path: "PLANTS VS LAWN MOWERS/PLANTS VS LAWN MOWERS.html"
             }
@@ -120,14 +139,18 @@
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0,0);
         }
 
-        function renderLibrary() {
+        function renderGrid() {
             const grid = document.getElementById('game-grid');
             grid.innerHTML = gameLibrary.map(game => `
                 <div class="card" onclick="viewGame(${game.id})">
-                    <img src="${game.image}" class="card-img" onerror="this.src='https://via.placeholder.com/300x200?text=GAME+LOGO'">
-                    <div style="padding: 15px;"><h3>${game.title}</h3></div>
+                    <img src="${game.image}" class="card-img" onerror="this.src='https://via.placeholder.com/400x250?text=GAME+LOGO'">
+                    <div style="padding: 25px;">
+                        <h3 style="margin: 0; font-size: 1.8rem;">${game.title}</h3>
+                        <p style="color: var(--vibrant-green); font-weight: bold;">VIEW MISSION &rarr;</p>
+                    </div>
                 </div>
             `).join('');
         }
@@ -135,46 +158,46 @@
         function viewGame(id) {
             const game = gameLibrary.find(g => g.id === id);
             document.getElementById('detail-area').innerHTML = `
-                <div style="display:flex; gap: 50px; align-items: center;">
-                    <img src="${game.image}" style="width: 450px; border-radius: 25px; border: 8px solid var(--vibrant-green); box-shadow: 15px 15px 0 var(--pure-yellow);">
-                    <div>
-                        <h2 style="font-size: 4rem; margin: 0; color: var(--vibrant-green);">${game.title}</h2>
-                        <p style="font-size: 1.4rem; font-weight: bold;">${game.description}</p>
-                        <button class="btn-play" onclick="initiateHardLock('${game.path}')">LOCK & LOAD</button>
+                <div style="display: flex; gap: 60px; align-items: center; background: white; padding: 50px; border-radius: 40px; border: 10px solid var(--pure-yellow);">
+                    <img src="${game.image}" style="width: 500px; border-radius: 20px; border: 8px solid var(--vibrant-green);">
+                    <div style="flex: 1;">
+                        <h2 style="font-size: 4.5rem; color: var(--vibrant-green); margin: 0;">${game.title}</h2>
+                        <p style="font-size: 1.5rem; line-height: 1.4;">${game.description}</p>
+                        <button class="btn-launch" onclick="launchInescapable('${game.path}')">START MISSION</button>
                     </div>
                 </div>
             `;
             showPage('game-detail');
         }
 
-        function initiateHardLock(path) {
-            const overlay = document.getElementById('game-overlay');
+        function launchInescapable(path) {
+            const viewport = document.getElementById('game-viewport');
             const iframe = document.getElementById('game-iframe');
 
-            // Set source and show overlay
+            // Load the game
             iframe.src = path;
-            overlay.style.display = 'block';
+            viewport.style.display = 'block';
 
-            // LOCK MOUSE LOGIC
-            // Note: Browser requires a click to trigger pointer lock. 
-            // The user clicking "LOCK & LOAD" counts as that gesture.
-            overlay.requestPointerLock = overlay.requestPointerLock || overlay.webkitRequestPointerLock;
-            overlay.requestPointerLock();
+            // BRYANT MOUSE LOCK ENGINE
+            // Requesting pointer lock on the viewport to trap the mouse
+            viewport.requestPointerLock = viewport.requestPointerLock || viewport.webkitRequestPointerLock;
+            
+            // We lock the pointer and focus the iframe
+            // Browsers allow this since it's triggered by the "Start Mission" click
+            viewport.requestPointerLock();
 
-            // Handle accidental Esc or movement - re-locks on click
-            overlay.addEventListener('click', () => {
-                overlay.requestPointerLock();
-            });
-
-            // Set focus immediately to the iframe
+            // Set the focus so keyboard inputs go directly to the game
             iframe.onload = () => {
                 iframe.focus();
-                // Send a virtual "click" to the iframe to wake up audio/input
-                iframe.contentWindow.postMessage('focus', '*');
+            };
+
+            // If they click anywhere, re-lock the mouse
+            viewport.onclick = () => {
+                viewport.requestPointerLock();
             };
         }
 
-        renderLibrary();
+        renderGrid();
     </script>
 </body>
 </html>

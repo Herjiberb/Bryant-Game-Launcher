@@ -177,10 +177,6 @@
             // Load the game
             iframe.src = path;
             viewport.style.display = 'block';
-
-            // BRYANT MOUSE LOCK ENGINE
-            // Requesting pointer lock on the viewport to trap the mouse
-            viewport.requestPointerLock = viewport.requestPointerLock || viewport.webkitRequestPointerLock;
             
             // We lock the pointer and focus the iframe
             // Browsers allow this since it's triggered by the "Start Mission" click

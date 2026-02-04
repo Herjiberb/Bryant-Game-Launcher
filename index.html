@@ -177,20 +177,6 @@
             // Load the game
             iframe.src = path;
             viewport.style.display = 'block';
-            
-            // We lock the pointer and focus the iframe
-            // Browsers allow this since it's triggered by the "Start Mission" click
-            viewport.requestPointerLock();
-
-            // Set the focus so keyboard inputs go directly to the game
-            iframe.onload = () => {
-                iframe.focus();
-            };
-
-            // If they click anywhere, re-lock the mouse
-            viewport.onclick = () => {
-                viewport.requestPointerLock();
-            };
         }
 
         renderGrid();
